@@ -157,11 +157,11 @@ layui.define(function(exports){
       ,limit: function(){
         var options = ['<span class="layui-laypage-limits"><select lay-ignore>'];
         layui.each(config.limits, function(index, item){
-          options.push(
-            '<option value="'+ item +'"'
-            +(item === config.limit ? 'selected' : '') 
-            +'>'+ item +' 条/页</option>'
-          );
+          if (item == 0) {
+              options.push('<option value="' + item + '"' + (config.count === config.limit ? 'selected' : '') + '>全部显示</option>');
+           } else {
+              options.push('<option value="' + item + '"' + (item === config.limit ? 'selected' : '') + '>' + item + ' 条/页</option>');
+           }
         });
         return options.join('') +'</select></span>';
       }()
@@ -232,6 +232,11 @@ layui.define(function(exports){
         var value = this.value;
         if(config.curr*value > config.count){
           config.curr = Math.ceil(config.count/value);
+        }
+        if (value == 0) {
+            config.limit = config.count;
+        } else {
+            config.limit = value;
         }
         config.limit = value;
         that.render();
